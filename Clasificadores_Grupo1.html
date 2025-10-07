@@ -7540,7 +7540,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Paso 1: Preparar el entorno en Colab</strong></p>
+<p><strong>Paso 1: Preparar el entorno</strong></p>
 <p>Instalacion/importe de las bibliotecas necesarias:</p>
 </div>
 </div>
@@ -7550,7 +7550,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">q</span> <span class="n">kaggle</span>
@@ -7605,7 +7605,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/train.csv"</span><span class="p">)</span>
@@ -7621,7 +7621,7 @@ a.anchor-link {
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div class="colab-df-container" id="df-55a311de-c2b6-4902-a29b-df5962e6abc3">
 <div>
@@ -7949,7 +7949,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -7990,7 +7990,7 @@ memory usage: 83.7+ KB
 </div>
 </div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -8097,7 +8097,7 @@ memory usage: 83.7+ KB
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># Crear una característica de Familia</span>
@@ -8149,6 +8149,31 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Luego definimos transformaciones para numéricas/categóricas:</p>
+<p>Para mejorar la calidad del modelo y asegurar que todos los algoritmos puedan interpretar correctamente las variables, se diseñaron pipelines de preprocesamiento diferenciados según el tipo de dato:</p>
+<ul>
+<li><p><strong>Variables numéricas</strong>:</p>
+<ul>
+<li><p>Se aplicó imputación de valores faltantes usando la mediana, ya que es una medida robusta frente a valores extremos.</p>
+</li>
+<li><p>Posteriormente, se realizó escalado estandarizado (StandardScaler) para que todas las variables numéricas quedaran en la misma escala (media = 0, desviación estándar = 1).</p>
+</li>
+<li><p>Esto es importante porque modelos como SVM y KNN dependen de distancias, y sin normalización podrían verse sesgados por atributos con magnitudes mayores (por ejemplo, Age vs Fare).</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Variables categóricas:</strong></p>
+<ul>
+<li><p>Se imputaron valores faltantes con la moda (valor más frecuente).</p>
+</li>
+<li><p>Luego se codificaron mediante One-Hot Encoding, creando variables binarias (0/1) por cada categoría posible.</p>
+</li>
+<li><p>Esta técnica evita la interpretación errónea de relaciones ordinales entre categorías (por ejemplo, entre “male” y “female”), y es compatible con modelos lineales o basados en árboles.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Finalmente, ambos pipelines (numérico y categórico) se integraron mediante un ColumnTransformer, lo que permitió automatizar el preprocesamiento dentro del flujo de entrenamiento y validación de cada modelo.
+Esto asegura coherencia y reproducibilidad: las mismas transformaciones se aplican tanto en los datos de entrenamiento como en los de prueba.</p>
 </div>
 </div>
 </div>
@@ -8157,7 +8182,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">num_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Age"</span><span class="p">,</span> <span class="s2">"Fare"</span><span class="p">,</span> <span class="s2">"FamilySize"</span><span class="p">]</span>
@@ -8213,7 +8238,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
@@ -8263,6 +8288,58 @@ RandomForest AUC: 0.8615 ± 0.0320
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Resultados de los modelos</strong></p>
+<p>Se evaluaron distintos clasificadores con el fin de identificar el modelo con mejor capacidad predictiva sobre los datos del Titanic. Los resultados del AUC promedio (con su desviación estándar) fueron los siguientes:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Modelo</strong></th>
+<th><strong>AUC promedio</strong></th>
+<th><strong>Desviación estándar</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logistic Regression</td>
+<td>0.8520</td>
+<td>± 0.0143</td>
+</tr>
+<tr>
+<td>Decision Tree</td>
+<td>0.7536</td>
+<td>± 0.0389</td>
+</tr>
+<tr>
+<td>KNN</td>
+<td>0.8475</td>
+<td>± 0.0296</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>0.8635</td>
+<td>± 0.0217</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.8615</td>
+<td>± 0.0320</td>
+</tr>
+</tbody>
+</table>
+<p>En general, los modelos basados en métodos de conjunto y márgenes (como SVM y Random Forest) mostraron el mejor desempeño, con valores de AUC superiores a 0.86, lo que indica una buena capacidad para distinguir entre pasajeros que sobrevivieron y los que no.</p>
+<p>El Árbol de Decisión presentó el menor rendimiento, posiblemente por su alta varianza y menor capacidad de generalización.
+Por su parte, la Regresión Logística y KNN alcanzaron resultados competitivos, aunque ligeramente inferiores al SVM.</p>
+<p>En conclusión, el SVM se perfila como el modelo más equilibrado entre rendimiento y estabilidad, siendo el más conveniente para este conjunto de datos.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>También se podria usar GridSearch para optimizar hiperparámetros, por ejemplo para RandomForest:</p>
 </div>
 </div>
@@ -8272,7 +8349,7 @@ RandomForest AUC: 0.8615 ± 0.0320
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
@@ -8315,6 +8392,28 @@ Mejores parámetros: {'clf__max_depth': None, 'clf__min_samples_split': 10, 'clf
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Optimización del modelo Random Forest</strong></p>
+<p>Tras realizar la búsqueda de hiperparámetros mediante GridSearchCV, se obtuvo un mejor puntaje de AUC de 0.8728, lo que representa una mejora respecto al modelo base.</p>
+<p>Los mejores parámetros encontrados fueron:</p>
+<ul>
+<li><p><code>max_depth</code>: None</p>
+</li>
+<li><p><code>min_samples_split</code>: 10</p>
+</li>
+<li><p><code>n_estimators</code>: 200</p>
+</li>
+</ul>
+<p>Estos valores sugieren que un mayor número de árboles y una división más conservadora (minimizando el sobreajuste) permitieron alcanzar un modelo más estable y con mejor capacidad de generalización.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Paso 6: Evaluar en conjunto de prueba interno o validación</strong></p>
 <p>Se Divide los datos en entrenamiento / validación:</p>
 </div>
@@ -8325,7 +8424,7 @@ Mejores parámetros: {'clf__max_depth': None, 'clf__min_samples_split': 10, 'clf
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
@@ -8372,6 +8471,53 @@ weighted avg       0.80      0.80      0.79       179
  [ 27  42]]
 </pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Resultados del modelo final</strong></p>
+<p>El modelo optimizado mostró un buen desempeño general, alcanzando una exactitud (accuracy) del 79.9% y un AUC de 0.835, lo que indica una adecuada capacidad para distinguir entre pasajeros que sobrevivieron y los que no.</p>
+<p>Se observó un mayor recall en la clase 0 (no sobrevivientes), mientras que la precisión fue más alta en la clase 1 (sobrevivientes), evidenciando un ligero sesgo hacia la clase mayoritaria. En conjunto, los valores de F1 y precisión sugieren un equilibrio aceptable entre falsos positivos y falsos negativos.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Clase</strong></th>
+<th><strong>Precisión</strong></th>
+<th><strong>Recall</strong></th>
+<th><strong>F1-score</strong></th>
+<th><strong>Soporte</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 (No sobrevivió)</td>
+<td>0.79</td>
+<td>0.92</td>
+<td>0.85</td>
+<td>110</td>
+</tr>
+<tr>
+<td>1 (Sobrevivió)</td>
+<td>0.82</td>
+<td>0.61</td>
+<td>0.70</td>
+<td>69</td>
+</tr>
+<tr>
+<td><strong>Promedio ponderado</strong></td>
+<td><strong>0.80</strong></td>
+<td><strong>0.80</strong></td>
+<td><strong>0.79</strong></td>
+<td><strong>179</strong></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -8484,7 +8630,7 @@ pequeños.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># ========== ENTRENAMIENTO Y VALIDACIÓN ==========</span>
@@ -8921,6 +9067,7 @@ El modelo SVM mostró el mejor equilibrio entre precisión y sensibilidad para e
 </tbody>
 </table>
 <p>El modelo <strong>SVM (Support Vector Machine)</strong> fue el que alcanzó el <strong>mejor desempeño global</strong>, con una <em>exactitud (Accuracy)</em> de <strong>82.1%</strong>, un <em>F1-score</em> de <strong>0.74</strong> y un <em>ROC AUC</em> de <strong>0.8366</strong>, lo que refleja una excelente capacidad discriminativa entre pasajeros que sobrevivieron y los que no.</p>
+<p><strong>Nota</strong>: El ROC AUC (Área bajo la curva ROC) mide la capacidad del modelo para distinguir entre clases. Un valor cercano a 1.0 indica un modelo con excelente poder discriminativo, mientras que un valor de 0.5 sugiere un desempeño similar al azar.</p>
 <h3 id="Interpretaci%C3%B3n"><strong>Interpretación</strong><a class="anchor-link" href="#Interpretaci%C3%B3n">¶</a></h3><ul>
 <li><strong>SVM superó ligeramente a la Regresión Logística y al Random Forest</strong>, manteniendo un equilibrio más estable entre precisión y recall.</li>
 <li>Esto sugiere que el espacio de decisión no es completamente lineal, pero que las fronteras entre clases pueden ser bien separadas mediante el margen máximo característico del SVM.</li>
